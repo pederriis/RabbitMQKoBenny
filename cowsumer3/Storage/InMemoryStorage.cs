@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace cowsumer3.Storage
 {
@@ -9,32 +11,38 @@ namespace cowsumer3.Storage
     public class InMemoryStorage : IStorage
     {
         // Simulate table in database
-        private static Dictionary<string, LocationData> _dataStore = new Dictionary<string, LocationData>();
+        private static Dictionary<string, List<LocationData>> _dataStore = new Dictionary<string, List<LocationData>>();
 
         private static Dictionary<string, CowData> _dataStoreCow = new Dictionary<string, CowData>();
 
 
-        public (double Latitude, double Longitude) LocationRead(string earTag)
+        public List<LocationData> LocationRead(string earTag)
         {
             //noget kode der henter cowlocation op fra databasen her
-            return (_dataStore[earTag].Latitude, _dataStore[earTag].Longitude);
+
+
+            //læs op på hvordan de dictionarys virker, der gemmes altid kun den nyeste record i den
+
+            var value = _dataStore.FirstOrDefault(pair => pair.Key == earTag).Value;
+
+            return value;
+            //return (_dataStore[earTag].Latitude, _dataStore[earTag].Longitude);
         }
 
         public void LocationCreateUpdate(string earTag, double latitude, double longitude)
         {
             if (_dataStore.ContainsKey(earTag))
             {
-                _dataStore[earTag].Latitude = latitude;
-                _dataStore[earTag].Longitude = longitude;
+                _dataStore[earTag].Add(new LocationData { Latitude = latitude, Longitude = longitude });
+               // _dataStore[earTag].Longitude = longitude;
             }
             else
             {
-                _dataStore.Add(earTag, new LocationData
-                {
-                    EarTag = earTag,
-                    Latitude = latitude,
-                    Longitude = longitude
-                });
+                List<LocationData> newLocations = new List<LocationData>();
+                newLocations.Add(new LocationData { Latitude = latitude, Longitude = longitude });
+                _dataStore.Add(earTag, newLocations);
+
+
             }
         }
 
@@ -70,7 +78,7 @@ namespace cowsumer3.Storage
     // Simulate table content in database
     public class LocationData
     {
-        public string EarTag { get; set; }
+       
         public double Latitude { get; set; }
         public double Longitude { get; set; }
     }

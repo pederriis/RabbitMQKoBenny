@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace cowsumer3.Storage
 {
@@ -9,7 +10,7 @@ namespace cowsumer3.Storage
         /// </summary>
         /// <param name="earTag">Ear tag</param>
         /// <returns>Latitude and Longitude packed in a tuble</returns>
-        (double Latitude, double Longitude) LocationRead(string earTag);
+       List<LocationData> LocationRead(string earTag);
 
         /// <summary>
         /// Writes newest location on a cow, to the database

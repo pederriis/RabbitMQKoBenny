@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace cowsumer3.Controllers
@@ -28,14 +29,13 @@ namespace cowsumer3.Controllers
         public IActionResult LocationReport(string earTag)
         {
             
-           var location = _storage.LocationRead(earTag);
+           var locations = _storage.LocationRead(earTag);
             var cow = _storage.ReadCow(earTag);
 
             var dto = new LocationReport
             {
                 Name = cow.Name,
-                Latitude = location.Latitude,
-                Longitude = location.Longitude
+                Locations = locations
             };
 
             return Ok(dto);
