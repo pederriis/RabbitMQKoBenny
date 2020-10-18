@@ -20,12 +20,9 @@ namespace cowsumer3.Storage
         {
             //noget kode der henter cowlocation op fra databasen her
 
+            var locations = _dataStore.FirstOrDefault(pair => pair.Key == earTag).Value;
 
-            //læs op på hvordan de dictionarys virker, der gemmes altid kun den nyeste record i den
-
-            var value = _dataStore.FirstOrDefault(pair => pair.Key == earTag).Value;
-
-            return value;
+            return locations;
             //return (_dataStore[earTag].Latitude, _dataStore[earTag].Longitude);
         }
 
